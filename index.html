@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f7f99">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="مصطلحات التشريح">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<title>مصطلحات التشريح</title>
+<style>
+:root{--bg:#f3f8f9;--card:#fff;--tx:#12303a;--mu:#5d7a84;--ac:#1f7f99;--ok:#2e9e6a;--no:#d0463f;--bd:#d3e3e8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="night"]{--bg:#0f1a1f;--card:#17262d;--tx:#e6f1f4;--mu:#8aa6b0;--ac:#4fb6d1;--ok:#4cc38a;--no:#f06a62;--bd:#26404a}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic",sans-serif;line-height:1.7;min-height:100vh}
+.w{max-width:560px;margin:0 auto;padding:14px 14px 28px}
+h1{font-size:20px;margin:6px 0 2px}.sub{color:var(--mu);font-size:13px;margin:0 0 14px}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button{flex:1}
+button{font:inherit;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:10px 12px;border-radius:10px}
+button.p{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:600}
+button.on{border-color:var(--ac);color:var(--ac);font-weight:600}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:12px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.n{font-size:26px;font-weight:700;color:var(--ac)}.l{font-size:12px;color:var(--mu)}
+.bar{height:10px;background:var(--bd);border-radius:6px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--ac)}
+.q{font-size:22px;font-weight:700;text-align:center;padding:14px 6px;direction:auto;word-break:break-word}
+.tag{font-size:12px;color:var(--mu);text-align:center}
+.opt{display:block;width:100%;margin-top:8px;text-align:start;font-size:16px;direction:auto}
+.opt.ok{background:var(--ok);color:#fff;border-color:var(--ok)}.opt.no{background:var(--no);color:#fff;border-color:var(--no)}
+.row{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px dashed var(--bd);direction:auto}.row b{color:var(--mu);font-weight:400;font-size:12px;min-width:56px}
+label{display:block;font-size:13px;color:var(--mu);margin:10px 0 4px}
+input,select,textarea{font:inherit;width:100%;padding:9px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)}
+input[type=color]{height:42px;padding:2px}textarea{min-height:90px}
+.ft{text-align:center;color:var(--mu);font-size:12px;margin-top:18px}
+.msg{font-weight:600;text-align:center;margin:10px 0}
+.hide{display:none}
+</style>
+</head>
+<body>
+<div class="w">
+<h1>مصطلحات التشريح</h1>
+<p class="sub">رأس وعنق · التشريح الوصفي 1</p>
+<div class="tabs"><button id="t1" class="on">اليوم</button><button id="t2">الإعدادات</button></div>
+
+<div id="home">
+ <div id="nbanner" class="c hide">⏰ حان وقت جلسة اليوم</div>
+ <div class="c"><div class="g">
+  <div><div class="n" id="sDays">0</div><div class="l">يوم حتى الموعد</div></div>
+  <div><div class="n" id="sQuota">0</div><div class="l">كلمات جديدة اليوم</div></div>
+  <div><div class="n" id="sDue">0</div><div class="l">للمراجعة اليوم</div></div>
+  <div><div class="n" id="sDone">0</div><div class="l">محفوظة</div></div>
+ </div>
+ <div class="bar"><i id="pb" style="width:0"></i></div><div class="l" id="pt"></div></div>
+ <button class="p" id="go" style="width:100%;padding:14px;font-size:17px">ابدأ جلسة اليوم</button>
+</div>
+
+<div id="sess" class="hide">
+ <div class="c" id="card"></div>
+ <div class="l" id="left" style="text-align:center"></div>
+ <button id="quit" style="width:100%;margin-top:10px">إنهاء الجلسة</button>
+</div>
+
+<div id="set" class="hide">
+ <div class="c">
+  <label>موعد الانتهاء</label><input type="date" id="dl">
+  <label>عدد الكلمات الجديدة يوميًا (0 = حساب تلقائي حسب الموعد)</label><input type="number" id="pd" min="0" max="200">
+  <label>وقت التذكير اليومي</label><input type="time" id="tm">
+  <button id="nt" style="margin-top:10px;width:100%">تفعيل الإشعارات</button>
+  <div class="l" style="margin-top:6px">الإشعارات تعمل عند فتح الصفحة (أو التطبيق المثبت على الشاشة الرئيسية) في المتصفح.</div>
+ </div>
+ <div class="c">
+  <label>الوضع</label>
+  <div class="tabs"><button data-th="day">نهاري</button><button data-th="night">ليلي</button><button data-th="custom">مخصص</button></div>
+  <div id="cust" class="g hide"><div><label>الخلفية</label><input type="color" id="cbg"></div><div><label>اللون الرئيسي</label><input type="color" id="cac"></div></div>
+ </div>
+ <div class="c">
+  <label>إضافة مصطلحات (سطر لكل مصطلح: عربي | لاتيني | إنجليزي)</label>
+  <textarea id="imp" placeholder="الغدة النكفية | Glandula parotidea | Parotid gland"></textarea>
+  <button id="addb" style="margin-top:8px;width:100%">إضافة</button>
+  <div class="l" id="cnt"></div>
+ </div>
+ <button id="rst" style="width:100%">مسح التقدّم</button>
+</div>
+
+<div class="ft">© جميع الحقوق محفوظة للهيئة الطلابية – كلية الطب البشري، جامعة حمص</div>
+</div>
+
+<script>
+const BASE=`العضلة الجبهية القذالية|Musculus occipitofrontalis|Occipitofrontalis muscle
+العضلة الدويرية العينية|Musculus orbicularis oculi|Orbicularis oculi muscle
+العضلة الوجنية الكبيرة|Musculus zygomaticus major|Zygomaticus major muscle
+العضلة المبوقة|Musculus buccinator|Buccinator muscle
+العضلة الضحكية|Musculus risorius|Risorius muscle
+العضلة الذقنية|Musculus mentalis|Mentalis muscle
+شريان سباتي باطن|Arteria carotis interna|Internal carotid artery
+شريان سباتي ظاهر|Arteria carotis externa|External carotid artery
+شريان عيني|Arteria ophthalmica|Ophthalmic artery
+عصب مثلث التوائم|Nervus trigeminus|Trigeminal nerve
+غدة نكفية|Glandula parotidea|Parotid gland
+سفاق|Aponeurosis|Epicranial aponeurosis
+العظم الجبهي|Os frontale|Frontal bone
+العظم الوتدي|Os sphenoidale|Sphenoid bone
+العظم الغربالي|Os ethmoidale|Ethmoid bone
+العظم القذالي|Os occipitale|Occipital bone
+العظم الصدغي|Os temporale|Temporal bone
+العظم الجداري|Os parietale|Parietal bone
+عظم الفك السفلي|Mandibula|Mandible
+العظم الوجني|Os zygomaticum|Zygomatic bone
+العظم الحنكي|Os palatinum|Palatine bone
+العظم الدمعي|Os lacrimale|Lacrimal bone
+العظم الأنفي|Os nasale|Nasal bone
+الحاجز الأنفي|Septum nasi|Nasal septum
+العرف الجبهي|Crista frontalis|Frontal crest
+الدرز الإكليلي|Sutura coronalis|Coronal suture
+الدرز السهمي|Sutura sagittalis|Sagittal suture
+الدرز اللامي|Sutura lambdoidea|Lambdoid suture
+الحفرة القحفية الأمامية|Fossa cranii anterior|Anterior cranial fossa
+صفيحة مصفوية|Lamina cribrosa|Cribriform plate
+الجيب الفكي|Sinus maxillaris|Maxillary sinus
+الناتئ الإبري|Processus styloideus|Styloid process
+الناتئ الخشائي|Processus mastoideus|Mastoid process
+الناتئ المنقاري|Processus coronoideus|Coronoid process
+الناتئ اللقمي|Processus condylaris|Condylar process
+الثلمة الفكية السفلية|Incisura mandibulae|Mandibular notch
+العصب الوجهي|Nervus facialis|Facial nerve
+العصب البصري|Nervus opticus|Optic nerve
+العصب المبهم|Nervus vagus|Vagus nerve
+الغدة الدرقية|Glandula thyroidea|Thyroid gland
+العضلة القترائية|Musculus sternocleidomastoideus|Sternocleidomastoid muscle
+العضلة شبه المنحرفة|Musculus trapezius|Trapezius muscle
+الوريد الوداجي الباطن|Vena jugularis interna|Internal jugular vein
+الغمد السباتي|Vagina carotica|Carotid sheath
+الشريان الفقري|Arteria vertebralis|Vertebral artery
+العظم اللامي|Os hyoideum|Hyoid bone
+العضلة مغضنة الحاجب|Musculus corrugator supercilii|Corrugator supercilii muscle
+العضلة الناشلة|Musculus procerus|Procerus muscle
+العضلة الأنفية|Musculus nasalis|Nasalis muscle
+العضلة الخافضة للوترة|Musculus depressor septi nasi|Depressor septi nasi muscle
+العضلة الأذنية الأمامية|Musculus auricularis anterior|Anterior auricular muscle
+العضلة الأذنية الخلفية|Musculus auricularis posterior|Posterior auricular muscle
+العضلة الأذنية العلوية|Musculus auricularis superior|Superior auricular muscle
+العضلة رافعة الشفة العلوية وجناح الأنف|Musculus levator labii superioris alaeque nasi|Levator labii superioris alaeque nasi muscle
+العضلة رافعة الشفة العلوية|Musculus levator labii superioris|Levator labii superioris muscle
+العضلة رافعة الصوار|Musculus levator anguli oris|Levator anguli oris muscle
+العضلة الوجنية الصغيرة|Musculus zygomaticus minor|Zygomaticus minor muscle
+العضلة الدويرية الفموية|Musculus orbicularis oris|Orbicularis oris muscle
+العضلة خافضة الصوار|Musculus depressor anguli oris|Depressor anguli oris muscle
+العضلة خافضة الشفة السفلية|Musculus depressor labii inferioris|Depressor labii inferioris muscle
+شريان فوق بكري|Arteria supratrochlearis|Supratrochlear artery
+شريان فوق حجاجي|Arteria supraorbitalis|Supraorbital artery
+عصب أذني كبير|Nervus auricularis magnus|Great auricular nerve
+نسيج ضام|Tela connectiva|Connective tissue
+سمحاق عظمي|Periosteum|Periosteum
+عصب وجني صدغي|Nervus zygomaticotemporalis|Zygomaticotemporal nerve
+العصب الأذني الصدغي|Nervus auriculotemporalis|Auriculotemporal nerve
+العصب القذالي الصغير|Nervus occipitalis minor|Lesser occipital nerve
+العصب القذالي الكبير|Nervus occipitalis major|Greater occipital nerve
+القرين الأنفي السفلي|Concha nasalis inferior|Inferior nasal concha
+صدفة جبهية|Squama frontalis|Frontal squama
+حافة فوق الحجاج|Margo supraorbitalis|Supraorbital margin
+ثلمة فوق الحجاج|Incisura supraorbitalis|Supraorbital notch
+القوس الحاجبية|Arcus superciliaris|Superciliary arch
+ثلم الجيب السهمي العلوي|Sulcus sinus sagittalis superioris|Groove for superior sagittal sinus
+الانطباعات الإصبعية|Impressiones digitatae|Digitate impressions
+الحفرة البكرية|Fovea trochlearis|Trochlear fovea
+حفرة الغدة الدمعية|Fossa glandulae lacrimalis|Lacrimal fossa
+الثلمة الغربالية|Incisura ethmoidalis|Ethmoidal notch
+الجيبان الجبهيان|Sinus frontales|Frontal sinuses
+نفقان غربالیان|Canales ethmoidales|Ethmoidal canals
+الشوكة الأنفية|Spina nasalis|Nasal spine
+الناتئ الجبهي للفكي|Processus frontalis maxillae|Frontal process of maxilla
+صفيحة عمودية|Lamina perpendicularis|Perpendicular plate
+التيه الغربالي|Labyrinthus ethmoidalis|Ethmoidal labyrinth
+ألياف العصب الشمي|Fila olfactoria|Olfactory nerve fibers
+البصلة الشمية|Bulbus olfactorius|Olfactory bulb
+غضروف الوتيرة الأنفية|Cartilago septi nasi|Nasal septal cartilage
+خلايا غربالية|Cellulae ethmoidales|Ethmoidal cells
+قرين أنفي علوي|Concha nasalis superior|Superior nasal concha
+قرين أنفي متوسط|Concha nasalis media|Middle nasal concha
+صماخ أنفي أوسط|Meatus nasi medius|Middle nasal meatus
+الفرجة الهلالية|Hiatus semilunaris|Semilunar hiatus
+الفقاعة الغربالية|Bulla ethmoidalis|Ethmoidal bulla
+جسم العظم الوتدي|Corpus ossis sphenoidalis|Body of sphenoid bone
+جناحان صغيران|Alae minores|Lesser wings
+جناحان كبيران|Alae majores|Greater wings
+ناتئان جناحيان|Processus pterygoidei|Pterygoid processes
+الجيب الوتدي|Sinus sphenoidalis|Sphenoidal sinus
+تلم المصالبة|Sulcus chiasmatis|Chiasmatic sulcus
+النفقان البصريان|Canales optici|Optic canals
+الحفرة النخامية|Fossa hypophysialis|Hypophysial fossa
+الغدة النخامية|Glandula pituitaria|Pituitary gland
+المنقار الوتدي|Rostrum sphenoidale|Sphenoidal rostrum
+الثلم السباتي|Sulcus caroticus|Carotid sulcus
+الجيب الكهفي|Sinus cavernosus|Cavernous sinus
+الشق الحجاجي العلوي|Fissura orbitalis superior|Superior orbital fissure
+الشريان السحائي الأوسط|Arteria meningea media|Middle meningeal artery
+العصب الفكي العلوي|Nervus maxillaris|Maxillary nerve
+الحفرة الجناحية الحنكية|Fossa pterygopalatina|Pterygopalatine fossa
+العصب محرك العين|Nervus oculomotorius|Oculomotor nerve
+العصب العيني|Nervus ophthalmicus|Ophthalmic nerve
+العصب البكري|Nervus trochlearis|Trochlear nerve
+العصب مبعد العين|Nervus abducens|Abducent nerve
+الشق الحجاجي السفلي|Fissura orbitalis inferior|Inferior orbital fissure
+العضلة الجناحية الإنسية|Musculus pterygoideus medialis|Medial pterygoid muscle
+العضلة الجناحية الوحشية|Musculus pterygoideus lateralis|Lateral pterygoid muscle
+الشص الجناحي|Hamulus pterygoideus|Pterygoid hamulus
+العضلة موترة شراع الحنك|Musculus tensor veli palatini|Tensor veli palatini muscle
+القسم الصخري للعظم الصدغي|Pars petrosa ossis temporalis|Petrous part of temporal bone
+الشريان القاعدي|Arteria basilaris|Basilar artery
+عاصرة البلعوم العلوية|Musculus constrictor pharyngis superior|Superior pharyngeal constrictor muscle
+الناتئ الوداجي|Processus jugularis|Jugular process
+الخط القفوي العلوي|Linea nuchalis superior|Superior nuchal line
+اللقمة القذالية|Condylus occipitalis|Occipital condyle
+النفق تحت اللساني|Canalis nervi hypoglossi|Hypoglossal canal
+الحدبة الجدارية|Eminentia parietalis|Parietal eminence
+صماخ السمع الخارجي|Meatus acusticus externus|External acoustic meatus
+العصب الصخري الكبير|Nervus petrosus major|Greater petrosal nerve
+صماخ السمع الباطن|Meatus acusticus internus|Internal acoustic meatus
+العصب الدهليزي القوقعي|Nervus vestibulocochlearis|Vestibulocochlear nerve
+الحفرة الوداجية|Fossa jugularis|Jugular fossa
+العضلة الإبرية اللامية|Musculus stylohyoideus|Stylohyoid muscle
+العضلة الإبرية البلعومية|Musculus stylopharyngeus|Stylopharyngeus muscle
+العضلة الإبرية اللسانية|Musculus styloglossus|Styloglossus muscle
+الثقبة الإبرية الخشائية|Foramen stylomastoideum|Stylomastoid foramen
+النفق السباتي|Canalis caroticus|Carotid canal
+الثقبة تحت الحجاجية|Foramen infraorbitale|Infraorbital foramen
+الحفرة النابية|Fossa canina|Canine fossa
+الشريان الفكي|Arteria maxillaris|Maxillary artery
+الثقبة الذقنية|Foramen mentale|Mental foramen
+النفق الفكي|Canalis mandibulae|Mandibular canal
+الخط المائل|Linea obliqua|Oblique line
+العضلة الذقنية اللامية|Musculus geniohyoideus|Geniohyoid muscle
+العضلة الماضغة|Musculus masseter|Masseter muscle
+اللسين|Lingula mandibulae|Lingula of mandible
+مفصل صدغي فكي|Articulatio temporomandibularis|Temporomandibular joint
+قرص مفصلي|Discus articularis|Articular disc
+المحفظة المفصلية|Capsula articularis|Articular capsule
+شق كلازر|Fissura petrotympanica|Petrotympanic fissure
+شريان صدغي سطحي|Arteria temporalis superficialis|Superficial temporal artery
+الغدة تحت الفك السفلي|Glandula submandibularis|Submandibular gland
+الغدة تحت اللسان|Glandula sublingualis|Sublingual gland
+قناة الغدة النكفية|Ductus parotideus|Parotid duct
+الوريد الوجهي|Vena facialis|Facial vein
+الوريد الوداجي الظاهر|Vena jugularis externa|External jugular vein
+العصب البلعومي اللساني|Nervus glossopharyngeus|Glossopharyngeal nerve
+الجذع الودي|Truncus sympathicus|Sympathetic trunk
+العصب الحنجري العلوي|Nervus laryngeus superior|Superior laryngeal nerve
+الشريان الدرقي العلوي|Arteria thyroidea superior|Superior thyroid artery
+اللوزة الحنكية|Tonsilla palatina|Palatine tonsil
+الشريان الزاوي|Arteria angularis|Angular artery
+الشريان القذالي|Arteria occipitalis|Occipital artery
+العصب الحنجري الراجع|Nervus laryngeus recurrens|Recurrent laryngeal nerve
+الحلقة الشريانية|Circulus arteriosus cerebri|Cerebral arterial circle (Circle of Willis)`.split("\n").map(l=>l.split("|"));
+const LN=["العربي","اللاتيني","الإنجليزي"],DAY=864e5,IV=[0,1,2,4,7,14];
+const $=id=>document.getElementById(id);
+let S={cards:{},extra:[],set:{dl:"2026-12-22",pd:0,tm:"20:00",th:matchMedia("(prefers-color-scheme:dark)").matches?"night":"day",bg:"#f3f8f9",ac:"#1f7f99"},day:{d:"",n:0},ln:""};
+try{const r=localStorage.getItem("anat1");if(r){const o=JSON.parse(r);S={...S,...o,set:{...S.set,...o.set}}}}catch(e){}
+const save=()=>{try{localStorage.setItem("anat1",JSON.stringify(S))}catch(e){}};
+const terms=()=>BASE.concat(S.extra);
+const key=t=>t[2].toLowerCase();
+const today=()=>new Date().toISOString().slice(0,10);
+if(S.day.d!==today()){S.day={d:today(),n:0}}
+const card=t=>S.cards[key(t)]||(S.cards[key(t)]={b:0,due:0,seen:0});
+const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+function daysLeft(){return Math.max(1,Math.ceil((new Date(S.set.dl+"T23:59:59")-Date.now())/DAY))}
+function quota(){const un=terms().filter(t=>!card(t).seen).length;const q=S.set.pd>0?S.set.pd:Math.ceil(un/Math.max(1,daysLeft()-5));return Math.max(0,Math.min(un,q-S.day.n))}
+function dueList(){const n=Date.now();return terms().filter(t=>{const c=card(t);return c.seen&&c.due<=n})}
+function theme(){const r=document.documentElement,s=S.set;r.dataset.theme=s.th==="night"?"night":"light";
+ ["--bg","--ac"].forEach(v=>r.style.removeProperty(v));
+ if(s.th==="custom"){r.style.setProperty("--bg",s.bg);r.style.setProperty("--ac",s.ac)}
+ document.querySelectorAll("[data-th]").forEach(b=>b.classList.toggle("on",b.dataset.th===s.th));$("cust").classList.toggle("hide",s.th!=="custom")}
+function home(){const T=terms(),done=T.filter(t=>card(t).b>=4).length;
+ $("sDays").textContent=daysLeft();$("sQuota").textContent=quota();$("sDue").textContent=dueList().length;$("sDone").textContent=done;
+ $("pb").style.width=(T.length?done/T.length*100:0)+"%";$("pt").textContent=done+" من "+T.length+" مصطلح";$("cnt").textContent="عدد المصطلحات الحالي: "+T.length}
+function show(id){["home","sess","set"].forEach(x=>$(x).classList.toggle("hide",x!==id));$("t1").classList.toggle("on",id!=="set");$("t2").classList.toggle("on",id==="set");if(id==="home")home()}
+$("t1").onclick=()=>show("home");$("t2").onclick=()=>show("set");
+
+let Q=[],last="",t0=0,cur=null,stat={};
+$("go").onclick=()=>{const learn=terms().filter(t=>!card(t).seen).slice(0,quota()).map(t=>({t,learn:1,tries:0}));
+ Q=shuf(dueList().map(t=>({t,tries:0})).concat(learn));stat={k:0,w:0};show("sess");next()};
+$("quit").onclick=()=>{save();show("home")};
+function next(){
+ if(!Q.length){$("card").innerHTML='<div class="msg">خلصت جلسة اليوم ✅</div><div class="row"><span>صح وسريع</span><b>'+stat.k+'</b></div><div class="row"><span>يحتاج إعادة</span><b>'+stat.w+'</b></div>';$("left").textContent="";save();return}
+ let i=Q.findIndex(x=>key(x.t)!==last);if(i<0)i=0;cur=Q.splice(i,1)[0];last=key(cur.t);
+ $("left").textContent="المتبقي: "+(Q.length+1);
+ const t=cur.t,el=$("card");
+ if(cur.learn){el.innerHTML='<div class="tag">كلمة جديدة</div>'+t.map((v,k)=>'<div class="row"><b>'+LN[k]+'</b><span>'+v+'</span></div>').join("")+'<button class="p" id="ok" style="width:100%;margin-top:12px">فهمتها</button>';
+  $("ok").onclick=()=>{const c=card(t);c.seen=1;c.b=0;S.day.n++;Q.splice(Math.min(3,Q.length),0,{t,tries:0});save();next()};return}
+ const a=Math.random()*3|0,b=[0,1,2].filter(x=>x!==a)[Math.random()*2|0];
+ const pool=shuf(terms().filter(x=>x[b]!==t[b]&&x[b]!==t[a])).map(x=>x[b]);
+ const opts=shuf([t[b]].concat([...new Set(pool)].slice(0,3)));
+ el.innerHTML='<div class="tag">'+LN[a]+' ← '+LN[b]+'</div><div class="q">'+t[a]+'</div><div id="os"></div>';
+ opts.forEach(o=>{const bt=document.createElement("button");bt.className="opt";bt.textContent=o;bt.onclick=()=>ans(bt,o===t[b],opts);$("os").appendChild(bt)});
+ t0=Date.now();cur.b=b}
+function ans(btn,ok,opts){
+ const dt=(Date.now()-t0)/1000,t=cur.t,c=card(t);
+ document.querySelectorAll(".opt").forEach(x=>{x.disabled=true;if(x.textContent===t[cur.b])x.classList.add("ok")});
+ if(!ok)btn.classList.add("no");
+ let g=!ok?"forgot":dt<=5?"know":dt<=10?"half":"weak";
+ const msgs={forgot:"غلط — رح ترجع بعد شوي",know:"صح وسريع — ممتاز",half:"صح بس بطيء — رح تنعاد",weak:"صح بس تأخرت كتير — رح تنعاد"};
+ if(g==="know"){c.b=Math.min(5,c.b+1);stat.k++}
+ else{stat.w++;if(g==="forgot"){c.b=0}else if(g==="weak"){c.b=Math.max(1,c.b-1)}else{c.b=Math.max(1,c.b)}
+  const pos=g==="forgot"?3+(Math.random()*3|0):g==="weak"?6+(Math.random()*3|0):10+(Math.random()*3|0);
+  if(cur.tries<3)Q.splice(Math.min(pos,Q.length),0,{t,tries:cur.tries+1})}
+ let d=g==="know"?IV[c.b]:g==="half"?1:0;
+ d=Math.min(d,Math.max(1,daysLeft()-2));
+ c.due=g==="know"?Date.now()+d*DAY:Date.now()+(g==="half"?DAY:0);
+ save();
+ const m=document.createElement("div");m.className="msg";m.textContent=msgs[g]+" ("+dt.toFixed(1)+" ث)";$("card").appendChild(m);
+ t.forEach((v,k)=>{const r=document.createElement("div");r.className="row";r.innerHTML="<b>"+LN[k]+"</b>";const s=document.createElement("span");s.textContent=v;r.appendChild(s);$("card").appendChild(r)});
+ const n=document.createElement("button");n.className="p";n.style.cssText="width:100%;margin-top:12px";n.textContent="التالي";n.onclick=next;$("card").appendChild(n)}
+
+$("dl").value=S.set.dl;$("pd").value=S.set.pd;$("tm").value=S.set.tm;$("cbg").value=S.set.bg;$("cac").value=S.set.ac;
+$("dl").onchange=e=>{S.set.dl=e.target.value||S.set.dl;save();home()};
+$("pd").onchange=e=>{S.set.pd=+e.target.value||0;save();home()};
+$("tm").onchange=e=>{S.set.tm=e.target.value;save()};
+$("cbg").oninput=e=>{S.set.bg=e.target.value;theme();save()};$("cac").oninput=e=>{S.set.ac=e.target.value;theme();save()};
+document.querySelectorAll("[data-th]").forEach(b=>b.onclick=()=>{S.set.th=b.dataset.th;theme();save()});
+$("nt").onclick=async()=>{try{const p=await Notification.requestPermission();$("nt").textContent=p==="granted"?"الإشعارات مفعّلة ✓":"الإذن مرفوض — فعّله من إعدادات المتصفح"}catch(e){$("nt").textContent="المتصفح لا يدعم الإشعارات"}};
+$("addb").onclick=()=>{const rows=$("imp").value.split("\n").map(l=>l.split(/\||\t/).map(x=>x.trim())).filter(r=>r.length>=3&&r[0]&&r[2]);
+ const have=new Set(terms().map(key));rows.forEach(r=>{if(!have.has(key(r))){S.extra.push(r.slice(0,3));have.add(key(r))}});$("imp").value="";save();home()};
+$("rst").onclick=()=>{if(confirm("متأكد؟ رح يتمسح كل التقدّم.")){S.cards={};S.day={d:today(),n:0};save();home()}};
+
+function remind(){const now=new Date(),[h,m]=S.set.tm.split(":").map(Number);
+ if(S.ln!==today()&&(now.getHours()>h||(now.getHours()===h&&now.getMinutes()>=m))){S.ln=today();save();$("nbanner").classList.remove("hide");
+  try{if(Notification.permission==="granted")new Notification("مصطلحات التشريح",{body:"اليوم: "+quota()+" كلمة جديدة و"+dueList().length+" للمراجعة"})}catch(e){}}}
+theme();home();remind();setInterval(remind,30000);
+if("serviceWorker" in navigator){addEventListener("load",()=>{try{navigator.serviceWorker.register("sw.js")}catch(e){}})}
+</script>
+</body>
+</html>
